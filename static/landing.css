@@ -1,3 +1,6 @@
+@import url(./animation.css);
+
+
 *{
     font-family: 'Poppins', sans-serif;
     font-weight: 600;
@@ -49,8 +52,8 @@ body {
     justify-content: space-between;
 }
 
-.navbar-links{
-    margin-left: 17rem;
+.filler{
+    width: 5rem;
 }
 
 .navbar-light .navbar-nav .nav-link:hover {
@@ -248,7 +251,7 @@ img, svg {
 }
 
 .section-content-services h1 {
-    margin-top: 8rem;
+    margin-top: 3rem;
     font-size: 4rem;
 }
 
@@ -258,11 +261,15 @@ img, svg {
 
 .list-services{
     display: grid;
-    grid-template-columns: repeat(3,10rem);
-    grid-template-rows: repeat(2,10rem);
+    justify-content: center;
+    align-items: center;
+    grid-template-columns: repeat(3,12rem);
+    grid-template-rows: repeat(2,12rem);
     margin-top: 4rem;
     margin-bottom: 4rem;
     grid-gap: 2rem;
+    transition: .5s cubic-bezier(0.25, 0.1, 0, 1.02);
+    
 }
 .service-type{
     background-color: white;
@@ -270,13 +277,16 @@ img, svg {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.81);
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content:flex-start;
     align-items: center;
     font-size: .8rem;
     text-align: center;
     padding-top: 1.5rem;
     transition: .5s cubic-bezier(0.25, 0.1, 0, 1.02);
     cursor: pointer;
+    animation: null 1s cubic-bezier(0.25, 0.1, 0, 1.02) 1 normal forwards;
+    overflow: hidden;
+   
 }
 
 .list-services img{
@@ -284,11 +294,38 @@ img, svg {
     width: 50px;
 }
 
-.service-type:hover{
+.service-hover:hover{
     border: 2px solid #003A33;
     transform: scale(1.1);
 }
 
+.card-body{
+    margin-top: 0rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.81);
+    max-height: 10rem;
+    border-radius: 18px;
+    overflow: hidden;
+}
+.service-name{
+    margin-left: 0rem;
+}
+
+.text-truncate {
+    white-space: inherit;
+    width: 13rem;
+}
+
+.sub-2{
+    text-align: left;
+}
+
+.bg-image{
+    width: 5rem;
+}
+
+.bg-image img{
+    height: 6rem;
+}
 /*products------------------------------------------------------------------------------*/
 
 .horizontal-product {
@@ -408,6 +445,11 @@ img, svg {
     width: 100%;
     flex-direction: row;
     justify-content: space-between;
+
+}
+
+.contact-filler{
+    width: 7rem;
 }
 
 .site-trademark{
@@ -415,7 +457,6 @@ img, svg {
     flex-direction: column;
     justify-content: center;
     text-align: center;
-    margin-left: 8rem;
     margin-top: -3rem;
 }
 
@@ -485,6 +526,7 @@ img, svg {
     border-radius: 10px;
     margin-top: 0.5rem;
     border: 2px solid #003A33;
+    background-color: rgb(255, 255, 255);
 }
 
 .section-content form h4 {

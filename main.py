@@ -1,7 +1,8 @@
-import smtplib,random
+import smtplib,random,string
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from flask import Flask, redirect,url_for,render_template,session,request,flash
+from confirmation_init import*
 from waitress import serve
 from mongo_init import*
 from settings import app
@@ -141,22 +142,30 @@ def otp():
 def appointment():  
     if 'user' in session:
         if request.method == 'POST':
+
+            session['transaction_type'] = 'Booking'
+            session['reference_id'] = get_referece_number()
+
             firstname = request.form['first-name']
             lastname = request.form['last-name']
             phone_number = request.form['phone-number']
             session['confirmation_email'] = request.form['email']
             date = request.form['date']
             time = request.form['time']
-            poa = request.form['POA']
+            session['entity_type'] = request.form['POA']
             msg = request.form['message']
 
             if(not firstname and not lastname and not phone_number and not date and not time):
                 flash(' You should check in on some of those fields above.')
                 return render_template('appointment.html',  user_in_session = session['user'][0].upper())
             else:
-                new_booking = add_booking(firstname,lastname,phone_number,session['confirmation_email'],date,time,poa,msg if msg else None)
+                new_booking = add_booking(firstname,lastname,phone_number,session['confirmation_email'],date,time,session['entity_type'],msg if msg else None,session['reference_id'])
                 machica_bookings.insert_one(new_booking)
-                return redirect(url_for('confirm', sender='booking_route'))
+
+                mail_content = Email_confirmation(session).generate_html()
+                if smtp_transactions(session['transaction_type'],mail_content,'html'):
+                    flash('Your booking has been confirmed. Check your email for details.')
+                    return redirect(url_for('appointment'))
         else:
             return render_template('appointment.html',  user_in_session = session['user'][0].upper())
     else:
@@ -166,201 +175,71 @@ def appointment():
 def order():
     if 'user' in session:
         if request.method == 'POST':
+
+            session['transaction_type'] = 'Order'
+            session['reference_id'] = get_referece_number()
+
             firstname = request.form['first-name']
             lastname = request.form['last-name']
             phone_number = request.form['phone-number']
             session['confirmation_email'] = request.form['email']
-            product = request.form['pr-name']
+            session['entity_type'] = request.form['pr-name']
             quantity = request.form['quantity']
             msg = request.form['message']
 
-            if(not firstname and not lastname and not phone_number and not product and not quantity):
+            if(not firstname and not lastname and not phone_number and not session['entity_type'] and not quantity):
                 flash(' You should check in on some of those fields above.')
                 return render_template('order.html',  user_in_session = session['user'][0].upper())
             else:
-                new_order = add_orders(firstname,lastname,phone_number,session['confirmation_email'],product,quantity,msg if msg else None)
+                new_order = add_orders(firstname,lastname,phone_number,session['confirmation_email'],session['entity_type'],quantity,msg if msg else None,session['reference_id'])
                 machica_orders.insert_one(new_order)
-                return redirect(url_for('confirm', sender='order_route'))
+
+                mail_content = Email_confirmation(session).generate_html()
+                if smtp_transactions(session['transaction_type'],mail_content,'html'):
+                    flash('Your order has been confirmed. Check your email for details.')
+                    return redirect(url_for('order'))
+
         else:
             return render_template('order.html',  user_in_session = session['user'][0].upper())
     else:
         return redirect(url_for('login'))
 
-
-@app.route('/inquiry/<email>/<message>')
-def inquiry(email,message):
-
-    mail_content = f'User {email} ask,{message}' 
-    #The mail addresses and password
-    sender_address = 'inquirymachica20@gmail.com'
-    sender_pass = 'meqfxsvprfyejvwn'
-    receiver_address = 'Jvragudo6@gmail.com'
-    #Setup the MIME
-    message = MIMEMultipart()
-    message['From'] = sender_address
-    message['To'] = receiver_address
-    message['Subject'] = 'User Inquiry'   #The subject line
+def smtp_transactions(trsaction_type,mail_content,mail_type):
+    try:
+        #The mail addresses and password
+        sender_address = 'inquirymachica20@gmail.com'
+        sender_pass = 'meqfxsvprfyejvwn'
+        receiver_address = session['confirmation_email']
+        #Setup the MIME
+        message = MIMEMultipart()
+        message['From'] = sender_address
+        message['To'] = receiver_address
+        message['Subject'] = trsaction_type   #The subject line
+        
+        #The body and the attachments for the mail
+        message.attach(MIMEText(mail_content, mail_type))
     
-    #The body and the attachments for the mail
-    message.attach(MIMEText(mail_content, 'plain'))
-   
-    #Create SMTP session for sending the mail
-    session = smtplib.SMTP('smtp.gmail.com', 587) #use gmail with port
-    session.starttls() #enable security
-    session.login(sender_address, sender_pass) #login with mail_id and password
-    text = message.as_string()
-    session.sendmail(sender_address, receiver_address, text)
-    session.quit()
-    print('the mail was sent')
+        #Create SMTP session for sending the mail
+        session_confirm = smtplib.SMTP('smtp.gmail.com', 587) #use gmail with port
+        session_confirm.starttls() #enable security
+        session_confirm.login(sender_address, sender_pass) #login with mail_id and password
+        text = message.as_string()
+        session_confirm.sendmail(sender_address, receiver_address, text)
+        session_confirm.quit()
 
-    return redirect(url_for('landing'))
+        return True
+    except: 
+        return False
 
-
-@app.route('/email_confirmation/<sender>')
-def confirm(sender):
-    mail_content = f"""
-           <html>
-                    <head>
-                    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
-                    <link rel="stylesheet" href="{url_for('static', filename='confirm.css')}">
-                    <title></title>
-                    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-                    <meta name="viewport" content="width=device-width, initial-scale=1">
-                    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-                    <body style="margin: 0 !important; padding: 0 !important; background-color: #eeeeee;" bgcolor="#eeeeee">
-                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                    <tr>
-                    <td align="center" style="background-color: #eeeeee;" bgcolor="#eeeeee">
-                    <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:600px;">
-                    <tr>
-                    <td align="center" valign="top" style="font-size:0; padding: 35px;" bgcolor="#003A33">
-                    <div style="display:inline-block; max-width:50%; min-width:100px; vertical-align:top; width:100%;">
-                    <table align="left" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:300px;">
-                    <tr>
-                    <td align="left" valign="top" style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 36px; font-weight: 800; line-height: 48px;" class="mobile-center">
-                    <h1 style="font-size: 1.2rem; font-weight: 800; margin: 0; color: #ffffff;">Mahica Dental clinic</h1>
-                    </td>
-                    </tr>
-                    </table>
-                    </div>
-                    <div style="display:inline-block; max-width:50%; min-width:100px; vertical-align:top; width:100%;" class="mobile-hide">
-                    <table align="left" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:300px;">
-                    <tr>
-                    <td align="right" valign="middle" style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; line-height: 48px;">
-                    <table cellspacing="0" cellpadding="0" border="0" align="right">
-                    <tr>
-                    <td style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 24px;"> <a href="#" target="_blank" style="color: #ffffff; text-decoration: none;"><img src="https://i.pinimg.com/564x/e7/b6/52/e7b652b5be3ef0ddcb90e1226049aa67.jpg" width="30" height="30" style="display: block; border: 0px;" /></a> </td>
-                    </tr>
-                    </table>
-                    </td>
-                    </tr>
-                    </table>
-                    </div>
-                    </td>
-                    </tr>
-                    <tr>
-                    <td align="center" style="padding: 35px 35px 20px 35px; background-color: #ffffff;" bgcolor="#ffffff">
-                    <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:600px;">
-                    <tr>
-                    <td align="center" style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 400; line-height: 24px; padding-top: 25px;"> <img src="https://img.icons8.com/carbon-copy/100/000000/checked-checkbox.png" width="125" height="120" style="display: block; border: 0px;" /><br>
-                    <h2 style="font-size: 30px; font-weight: 800; line-height: 36px; color: #009886; margin: 0;">Your {'order' if sender == 'order_route' else 'booking'} is confirmed! </h2>
-                    </td>
-                    </tr>
-                    <tr>
-                    </tr>
-                    <tr>
-                    <td align="left" style="padding-top: 20px;">
-                    <table cellspacing="0" cellpadding="0" border="0" width="100%">
-                    <tr>
-                    <td width="75%" align="left" bgcolor="#eeeeee" style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 800; line-height: 24px; padding: 10px;"> Order Reference # </td>
-                    <td width="25%" align="left" bgcolor="#eeeeee" style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 800; line-height: 24px; padding: 10px;"> 2345678 </td>
-                    </tr>
-                    <tr>
-                    <td width="75%" align="left" style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 400; line-height: 24px; padding: 15px 10px 5px 10px;"> Item price </td>
-                    <td width="25%" align="left" style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 400; line-height: 24px; padding: 15px 10px 5px 10px;"> sample price </td>
-                    </tr>
-                    <tr>
-                    <td width="75%" align="left" style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 400; line-height: 24px; padding: 5px 10px;"> Payment method </td>
-                    <td width="25%" align="left" style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 400; line-height: 24px; padding: 5px 10px;"> Over the counter </td>
-                    </tr>
-                    </table>
-                    </td>
-                    </tr>
-                    <tr>
-                    <td align="left" style="padding-top: 20px;">
-                    <table cellspacing="0" cellpadding="0" border="0" width="100%">
-                    <tr>
-                    <td width="75%" align="left" style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 800; line-height: 24px; padding: 10px; border-top: 3px solid #eeeeee; border-bottom: 3px solid #eeeeee;"> TOTAL </td>
-                    <td width="25%" align="left" style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 800; line-height: 24px; padding: 10px; border-top: 3px solid #eeeeee; border-bottom: 3px solid #eeeeee;"> sample total </td>
-                    </tr>
-                    </table>
-                    </td>
-                    </tr>
-                    </table>
-                    </td>
-                    </tr>
-                    <tr>
-                    <td align="center" height="100%" valign="top" width="100%" style="padding: 0 35px 35px 35px; background-color: #ffffff;" bgcolor="#ffffff">
-                    <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:660px;">
-                    </table>
-                    </td>
-                    </tr>
-                    <tr>
-                    </tr>
-                    <tr>
-                    <td align="center" style="padding: 35px; background-color: #ffffff;" bgcolor="#ffffff">
-                    <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:600px;">
-                    <tr>
-                    <td align="center"> <img src="https://i.pinimg.com/564x/75/8d/cc/758dccad44bd73e2a5f7106024b27fef.jpg" width="37" height="37" style="display: block; border: 0px;" /> </td>
-                    </tr>
-                    <tr>
-                    <td align="center" style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 400; line-height: 24px; padding: 5px 0 10px 0;">
-                    <p style="font-size: 14px; font-weight: 800; line-height: 18px; color: #333333;">Unit #1, G/F Aspiras Building,<br> Consolacion Street </p>
-                    </td>
-                    </tr>
-                    <tr>
-                    <td align="center" style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 400; line-height: 24px;">
-                    <p style="font-size: 14px; font-weight: 400; line-height: 20px; color: #777777;"> If you didn't create an account using this email address, please ignore this email or <a href="#" target="_blank" style="color: #777777;">unsusbscribe</a>. </p>
-                    </td>
-                    </tr>
-                    </table>
-                    </td>
-                    </tr>
-                    </table>
-                    </td>
-                    </tr>
-                    </table>
-                    </body>
-                    </html> 
-            """
-    #The mail addresses and password
-    sender_address = 'inquirymachica20@gmail.com'
-    sender_pass = 'meqfxsvprfyejvwn'
-    receiver_address = session['confirmation_email']
-    #Setup the MIME
-    message = MIMEMultipart()
-    message['From'] = sender_address
-    message['To'] = receiver_address
-    message['Subject'] = f"Machica {'Order' if sender == 'order_route' else 'Booking'}"   #The subject line
-    
-    #The body and the attachments for the mail
-    message.attach(MIMEText(mail_content, 'html'))
-   
-    #Create SMTP session for sending the mail
-    session_confirm = smtplib.SMTP('smtp.gmail.com', 587) #use gmail with port
-    session_confirm.starttls() #enable security
-    session_confirm.login(sender_address, sender_pass) #login with mail_id and password
-    text = message.as_string()
-    session_confirm.sendmail(sender_address, receiver_address, text)
-    session_confirm.quit()
-
-    if sender == 'order_route':
-        flash('Your order has been confirmed. Check your email for details.')
-        return redirect(url_for('order'))
-    elif sender == 'booking_route':
-        flash('Your booking has been confirmed. Check your email for details.')
-        return redirect(url_for('appointment'))
-
+def get_referece_number():
+    reference_number = ''
+    for i in range(8):
+        if random.randint(1,2) == 1:
+             reference_number += random.choice(string.ascii_uppercase)
+        else:
+            reference_number += str(random.randint(0,9))
+            
+    return reference_number
 
 @app.route('/logout')
 def logout():
