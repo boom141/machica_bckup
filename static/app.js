@@ -31,7 +31,7 @@ window.onscroll = function() {
 function active_onscroll(index){
   for(let i=0; i<nav_links.length-2; i++){
     if(index === i){
-      nav_links[i].style.color = '#7AC4E7'
+      nav_links[i].style.color = '#223b6e'
     }else{
       nav_links[i].style.color = 'white'
     }
@@ -55,25 +55,63 @@ function login_page(){
 
 const services = document.querySelectorAll('.service-type')
 const service_container = document.querySelector('.list-services')
+const sub_service = document.createElement('div')
+
+let current_index = -1
 
 services.forEach((element,index) =>{
       element.addEventListener('click', ()=>{
-          expand_services(index)
+          if(index !== current_index){
+            expand_services(index)
+            current_index = index
+          }
+          
       })
 })
-
-let service_list = new service_details('Service Name', null, '100')
  
 function expand_services(index){
     for(let i=0; i<services.length; i++){
       if(i === index){
         services[i].style.animationName = 'expand'
         services[i].classList.remove('service-hover')
-        services[i].style.padding = '2rem 2rem'
-        $(services[i]).append(service_list.render_html())
+        sub_service.classList.add('sub-service-attribute')
+        
+        for(let i=0;i<3;i++){
+          $(sub_service).append(new service_details(`Service name ${i+1}`,null,1000).render_html())
+        }
+        
+        $(services[i]).append(sub_service)
         service_container.style.display = 'flex'
+        $('.divider-service').css('display', 'inline-flex')
+        $('.bck-btn').css('display', 'block')
       }else{
         services[i].style.display = 'none'
       }
     }  
+}
+
+
+const back_btn = document.querySelectorAll('.bck-btn')
+
+back_btn.forEach((element,index)=>{
+  element.addEventListener('click', event =>{
+    for(let i=0; i<services.length; i++){
+      if(i === index){
+        services[i].style.animationName = 'wrap'
+        services[i].classList.add('service-hover')
+        services[i].removeChild(sub_service)
+      }else{
+        service_container.style.display = 'grid'
+        services[i].style.display = 'block'
+        services[i].style.animationName = 'null'
+      }
+      $('.divider-service').css('display', 'none')
+      $('.bck-btn').css('display', 'none')
+    }
+    setTimeout(()=>{ services[index].style.animationName = 'null'; current_index=-1}, 1000);
+  })
+})
+
+function redirect_booking(){
+  window.location = window.origin + '/appointment'
 }

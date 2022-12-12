@@ -155,6 +155,7 @@ def appointment():
             session['entity_type'] = request.form['POA']
             msg = request.form['message']
 
+            # remove the form checker**************
             if(not firstname and not lastname and not phone_number and not date and not time):
                 flash(' You should check in on some of those fields above.')
                 return render_template('appointment.html',  user_in_session = session['user'][0].upper())
@@ -187,6 +188,7 @@ def order():
             quantity = request.form['quantity']
             msg = request.form['message']
 
+            # remove the form checker**************
             if(not firstname and not lastname and not phone_number and not session['entity_type'] and not quantity):
                 flash(' You should check in on some of those fields above.')
                 return render_template('order.html',  user_in_session = session['user'][0].upper())
@@ -260,6 +262,6 @@ def sample():
     return render_template('sample.html')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5500, debug=True)
     # serve(app, host='0.0.0.0', port=5500, threads=1, url_prefix='/machica') 
    
