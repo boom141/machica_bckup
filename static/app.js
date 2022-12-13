@@ -31,7 +31,7 @@ window.onscroll = function() {
 function active_onscroll(index){
   for(let i=0; i<nav_links.length-2; i++){
     if(index === i){
-      nav_links[i].style.color = '#223b6e'
+      nav_links[i].style.color = '#77c0e3'
     }else{
       nav_links[i].style.color = 'white'
     }
@@ -115,3 +115,15 @@ back_btn.forEach((element,index)=>{
 function redirect_booking(){
   window.location = window.origin + '/appointment'
 }
+
+const border_content = document.querySelectorAll('.border-content')
+const about_border = document.querySelectorAll('.about_border')
+
+$('.border-content').hover((e)=>{
+  $(e.target.parentElement).css({'transform': 'translate(-50%, -50%)','transform': 'rotateY(-20deg)', 'transform': 'skewY(3deg)'})
+  $(e.target).css({'transform': 'rotateY(20deg)', 'transform': 'skewY(-3deg)'})
+},(e)=>{
+  $(e.target.parentElement).css({'transform': 'translate(0%, 0%)','transform': 'rotateY(0deg)', 'transform': 'skewY(0deg)'})
+  $(e.target).css({'transform': 'rotateY(0deg)', 'transform': 'skewY(0deg)'})
+})
+
