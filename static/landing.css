@@ -100,7 +100,7 @@ img, svg {
 .sticky {
     position: fixed;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.538);
-    background-color: #00302a;
+    background-color: #337c73;
 
 }
 
@@ -198,9 +198,10 @@ img, svg {
     margin-top: 0rem;
     height: 20rem;
     width: 100%;
-    background: #40e0d030;
+    background: white;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
 }
 
@@ -209,6 +210,7 @@ img, svg {
     grid-template-columns: repeat(4,19rem);
     grid-template-rows: repeat(1,13rem);
     column-gap: .5rem;
+    margin-bottom: 4rem;
 }
 
 .about-border{
@@ -225,7 +227,7 @@ img, svg {
     z-index: 2;
     height: 10rem;
     width: 16rem;
-    background-color: white;
+    background-color: cornsilk;
     display: flex;
     flex-direction: column;
     justify-content: center;

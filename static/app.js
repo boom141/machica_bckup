@@ -75,7 +75,11 @@ function expand_services(index){
         services[i].style.animationName = 'expand'
         services[i].classList.remove('service-hover')
         sub_service.classList.add('sub-service-attribute')
-        
+
+        while(sub_service.firstElementChild){
+          sub_service.firstElementChild.remove()
+        }
+
         for(let i=0;i<3;i++){
           $(sub_service).append(new service_details(`Service name ${i+1}`,null,1000).render_html())
         }
@@ -89,6 +93,7 @@ function expand_services(index){
       }
     }  
 }
+
 
 
 const back_btn = document.querySelectorAll('.bck-btn')
@@ -108,7 +113,7 @@ back_btn.forEach((element,index)=>{
       $('.divider-service').css('display', 'none')
       $('.bck-btn').css('display', 'none')
     }
-    setTimeout(()=>{ services[index].style.animationName = 'null'; current_index=-1}, 1000);
+    let timeout = setTimeout(()=>{ services[index].style.animationName = 'null'; current_index=-1; clearTimeout(timeout)}, 1000);
   })
 })
 
