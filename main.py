@@ -243,6 +243,11 @@ def get_referece_number():
             
     return reference_number
 
+
+@app.route('/admin')
+def admin():
+    return render_template('admin.html')
+
 @app.route('/logout')
 def logout():
     session.pop('user', None)
