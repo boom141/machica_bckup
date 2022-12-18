@@ -5,7 +5,8 @@ from flask import Flask, redirect,url_for,render_template,session,request,flash
 from confirmation_init import*
 from waitress import serve
 from mongo_init import*
-from settings import app
+from admin import*
+from settings import app, api
 
 @app.route('/', methods=['POST','GET'])
 def landing():
@@ -247,6 +248,7 @@ def get_referece_number():
 @app.route('/admin')
 def admin():
     return render_template('admin.html')
+
 
 @app.route('/logout')
 def logout():
