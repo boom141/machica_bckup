@@ -1,0 +1,23 @@
+{%extends "admin.html"%}
+{%block title%}admin-order{%endblock%}
+
+{%block content%}
+    <div class="main-admin">
+        <div class="panel-admin">
+            <h1 style="font-weight: 600;" >DASHBOARD</h1>
+            <div class="charts">
+                <div class="admin-charts" id="admin-charts"></div>
+            </div>
+            <div class="admin-schedule">
+                <div class="schedule-header">
+                    <h4>Today's Schedule</h4>
+                    <div class="option-btn">
+                        <div class="btn-typ"><img src="https://img.icons8.com/ios-filled/30/337c73/alarm.png"/></div>
+                        <!-- <div class="btn-typ"><img src="https://img.icons8.com/metro/26/337c73/trash.png"/></div> -->
+                    </div>
+                </div>
+                <div class="book-today"></div>
+            </div>
+        </div>
+    </div>
+{%endblock%}

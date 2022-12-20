@@ -41,45 +41,20 @@
         </div>
         
     </div>
-    <div class="main-admin">
-        <div class="panel-admin">
-            <h1>DASHBOARD</h1>
-            <div class="charts">
-                <div class="admin-charts" id="admin-charts"></div>
-            </div>
-            <div class="admin-schedule">
-                <div class="schedule-header">
-                    <h4>Today's Schedule</h4>
-                    <div class="option-btn">
-                        <div class="btn-typ"><img src="https://img.icons8.com/ios-filled/30/337c73/alarm.png"/></div>
-                        <div class="btn-typ"><img src="https://img.icons8.com/metro/26/337c73/trash.png"/></div>
-                    </div>
-                </div>
-                <div class="book-today"></div>
-            </div>
-        </div>
-    </div>
     {%block content%}
     {%endblock%}
     <div class="user-list">
         <div class="user-header">
             <h6 style="font-size: 2rem;">User List</h6>
             <form class="admin-form" action="">
-                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="''find user here....''">
-                <button type="submit" class="btn btn-primary" style="background-color: rgba(218, 218, 218, 0); border: none;"><img src="https://img.icons8.com/fluency-systems-filled/30/337c73/search-client.png"/></button>
+                <input id="user-find" type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="type the email...">
+                <button id="find-btn" type="button" class="btn btn-primary" style="background-color: rgba(218, 218, 218, 0); border: none; border-radius: 0px;"><img src="https://img.icons8.com/fluency-systems-filled/30/337c73/search-client.png"/></button>
             </form>
         </div>
         <div class="user-container" id="user-container">
-            <div class="loading-wrapper">
+            <div class="loading-wrapper-1">
                 <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
             </div>
-            <!-- <div class="user-block">
-                <div class="user-text" >
-                    <strong style="font-size: .9rem; margin-top: rem;">SAMPLE NAME</strong>
-                    <h6 style="font-size: .7rem;">sampleEmail@hotmail.com</h6>
-                </div>
-                <img src="https://img.icons8.com/ios-glyphs/50/337c73/circled-right.png"/>
-            </div> -->
         </div>
     </div>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -87,6 +62,7 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
     <script src="{{url_for('static', filename='admin-style/admin.js')}}"></script>
-    <script src="{{url_for('static', filename='admin-style/user.js')}}"></script>
+    <script src="{{url_for('static', filename='admin-style/data-html.js')}}"></script>
+    <script src="{{url_for('static', filename='admin-style/request-data.js')}}"></script>
 </body>
 </html>

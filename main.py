@@ -245,10 +245,17 @@ def get_referece_number():
     return reference_number
 
 
-@app.route('/admin')
-def admin():
-    return render_template('admin.html')
+@app.route('/admin/dashboard')
+def admin_dashboard():
+    return render_template('admin-dashboard.html')
 
+@app.route('/admin/booking')
+def admin_booking():
+    return render_template('admin-booking.html')
+
+@app.route('/admin/order')
+def admin_order():
+    return render_template('admin-order.html')
 
 @app.route('/logout')
 def logout():

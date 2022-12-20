@@ -6,6 +6,29 @@
     font-family: 'Poppins', sans-serif;
 }
 
+/* width */
+::-webkit-scrollbar {
+    width: .5rem;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey; 
+    border-radius: 10px;
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: grey; 
+    border-radius: 5px;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgb(105, 105, 105); 
+  }
+
+
 body{
     display: flex;
     flex-direction: row;
@@ -146,7 +169,7 @@ svg{
     display: flex;
     flex-direction: column;
     row-gap: .5rem;
-    border: 1px solid red;
+    overflow-y: auto;
 }
 
 .user-block{
