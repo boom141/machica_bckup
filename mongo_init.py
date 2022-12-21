@@ -23,7 +23,7 @@ def add_users(firstname,lastname,gender,phonenumber,email,password):
 
     return user
 
-def add_orders(firstname,lastname,phonenumber,email,product,quantity,msg,reference_number):
+def add_orders(firstname,lastname,phonenumber,email,product,quantity,msg,reference_number,date):
 
     orders = {
         'first_name':firstname,
@@ -34,7 +34,8 @@ def add_orders(firstname,lastname,phonenumber,email,product,quantity,msg,referen
         'quantity': quantity,
         'msg': msg,
         'payment_option': 'over the counter',
-        'reference_id': reference_number
+        'reference_id': reference_number,
+        'date': date
     }
 
     return orders

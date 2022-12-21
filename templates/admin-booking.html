@@ -4,19 +4,36 @@
 {%block content%}
     <div class="main-admin">
         <div class="panel-admin">
-            <h1 style="font-weight: 600;" >DASHBOARD</h1>
-            <div class="charts">
+            <h1 style="font-weight: 600;" >Appointments</h1>
+            <!-- <div class="charts">
                 <div class="admin-charts" id="admin-charts"></div>
-            </div>
-            <div class="admin-schedule">
+            </div> -->
+            <div class="admin-schedule booking-admin">
                 <div class="schedule-header">
-                    <h4>Today's Schedule</h4>
+                    <h4>Bookings</h4>
                     <div class="option-btn">
-                        <div class="btn-typ"><img src="https://img.icons8.com/ios-filled/30/337c73/alarm.png"/></div>
-                        <!-- <div class="btn-typ"><img src="https://img.icons8.com/metro/26/337c73/trash.png"/></div> -->
+                        <div class="btn-typ"></div>
                     </div>
                 </div>
-                <div class="book-today"></div>
+                <div class="bookings-section-main" id="bookings-section-main">
+                    <div class="book-today apt-block">
+                        <div class="date-section">
+                            <h1 style="color: white; font-size: 3.5rem; line-height: 3rem;">8</h1>
+                            <h6 style="color: white; font-size: .8rem; font-weight:bold;">NOVEMBER</h6>
+                        </div>
+                        <div class="book-details">
+                            <p style="font-weight: 600; font-size: 1.2rem; line-height: 1.5rem; width: auto;" >Service Category: Service Name <br>
+                                <span style="font-weight:300; font-size: 1rem;" >Sample Name: Sample@email.com</span> <br>
+                                <span style=" color: white; font-weight:300; font-size: .8rem; background-color: #337c73; padding: .3rem .3rem; border-radius: 20px;">Scheduled Time</span>
+                            </p>
+                        </div>
+                        <span style="height: 5rem; width: 1px; background-color: rgb(189, 189, 189);"></span>
+                        <div class="booking-button">
+                            <span style="color: white; font-weight: bold;">DELETE</span>
+                            <img src="https://img.icons8.com/metro/26/FFFFFF/trash.png"/>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

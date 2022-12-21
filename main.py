@@ -3,6 +3,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from flask import Flask, redirect,url_for,render_template,session,request,flash
 from confirmation_init import*
+from datetime import date
 from waitress import serve
 from mongo_init import*
 from admin import*
@@ -188,13 +189,13 @@ def order():
             session['entity_type'] = request.form['pr-name']
             quantity = request.form['quantity']
             msg = request.form['message']
-
+            order_date = str(date.today())
             # remove the form checker**************
             if(not firstname and not lastname and not phone_number and not session['entity_type'] and not quantity):
                 flash(' You should check in on some of those fields above.')
                 return render_template('order.html',  user_in_session = session['user'][0].upper())
             else:
-                new_order = add_orders(firstname,lastname,phone_number,session['confirmation_email'],session['entity_type'],quantity,msg if msg else None,session['reference_id'])
+                new_order = add_orders(firstname,lastname,phone_number,session['confirmation_email'],session['entity_type'],quantity,msg if msg else None,session['reference_id'],order_date)
                 machica_orders.insert_one(new_order)
 
                 mail_content = Email_confirmation(session).generate_html()

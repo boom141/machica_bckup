@@ -13,6 +13,7 @@
     flex-direction: column;
     justify-content: flex-start;
     padding: 2rem 1rem;
+    row-gap: 1rem;
 }
 
 .charts{
@@ -22,6 +23,7 @@
     flex-direction: row;
     justify-content: space-between;
     padding: 1rem 1rem;
+    column-gap: 5rem;
 }
 
 .admin-charts{
@@ -30,11 +32,20 @@
     border-radius: 10px;
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     box-shadow: 0 2px 3px rgba(0, 0, 0, 0.312);
     position: relative;
+    padding: 1rem 2rem;
+    column-gap:1rem;
+}
 
+.number-purchase{
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    text-align: center;
 }
 
 .admin-charts::before{
