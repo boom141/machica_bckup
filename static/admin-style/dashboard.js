@@ -2,7 +2,7 @@ const get_total_status = () =>{
     axios.get(`${window.origin}/admin/totalMonthSold`)
     .then(res =>{
         load_sold_status(res.data)
-    })
+        })
     .catch(error =>{
         console.log(error)
     })
@@ -32,8 +32,15 @@ const load_sold_status = (data) =>{
 const get_today_schedule = () =>{
     axios.get(`${window.origin}/admin/DailyAppointments`)
     .then(res =>{
-        $('.loading-wrapper-2').fadeOut('slow')
-        load_today_schedule(res.data)
+        
+        if(res.data.length > 0){
+            $('.loading-wrapper-2').fadeOut()
+            load_today_schedule(res.data)
+        }else{
+            $('.loading-wrapper-2').fadeOut()
+            $('.empty-container-1').css('display','flex')
+        }
+            
     })
     .catch(error =>{
         console.log(error)

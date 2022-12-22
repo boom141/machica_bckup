@@ -6,6 +6,24 @@
     align-items: center;
 }
 
+.empty-container-1,.empty-container-2,.empty-container-3,.empty-container-4{
+  display: none;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.not-found{
+  display: none;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .lds-ring {
   display: inline-block;
   position: relative;

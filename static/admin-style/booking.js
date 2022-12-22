@@ -1,8 +1,13 @@
 const get_booking_list = () =>{
     axios.get(`${window.origin}/admin/BookingList`)
     .then(res =>{
-        $('.loading-wrapper-3').fadeOut('slow')
-        load_booking_list(res.data)
+        if(res.data.length > 0){
+            $('.loading-wrapper-3').fadeOut('slow')
+            load_booking_list(res.data)
+        }else{
+            $('.loading-wrapper-3').fadeOut('slow')
+            $('.empty-container-3').css('display','flex')
+        }
     })
     .catch(error =>{
         console.log(error)

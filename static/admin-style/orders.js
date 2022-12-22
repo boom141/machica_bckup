@@ -1,8 +1,13 @@
 const get_order_list = () =>{
     axios.get(`${window.origin}/admin/OrderList`)
     .then(res =>{
-        $('.loading-wrapper-4').fadeOut('slow')
-        load_order_list(res.data)
+        if(res.data.length > 0){
+            $('.loading-wrapper-4').fadeOut('slow')
+            load_order_list(res.data)
+        }else{
+            $('.loading-wrapper-4').fadeOut('slow')
+            $('.empty-container-4').css('display','flex')
+        }
     })
     .catch(error =>{
         console.log(error)

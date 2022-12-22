@@ -9,8 +9,13 @@ window.onload = () =>{
 const get_user_list = () =>{
     axios.get(`${window.origin}/admin/getUserList`)
     .then(res =>{
-        $('.loading-wrapper-1').fadeOut('slow')
-        load_user_data(res.data)
+        if(res.data.length > 0){
+            $('.loading-wrapper-1').fadeOut('slow')
+            load_user_data(res.data)
+        }else{
+            $('.loading-wrapper-1').fadeOut('slow')
+            $('.empty-container-2').css('display','flex')
+        }
     })
     .catch(error =>{
         console.log(error)
@@ -30,6 +35,7 @@ const load_user_data = (user_data) =>{
 
 const find_btn = document.getElementById('find-btn')
 const user_find = document.getElementById('user-find')
+const not_found_ico = document.getElementById('not-found')
 
 find_btn.addEventListener('click', event =>{
     event.preventDefault()
@@ -39,12 +45,18 @@ find_btn.addEventListener('click', event =>{
     while(user_container.firstElementChild){
         user_container.firstElementChild.remove()
     }
-    $('.loading-wrapper').fadeIn()
 
     axios.post(`${window.origin}/admin/getUserList`,user_data)
     .then(res =>{
-        $('.loading-wrapper-1').fadeOut('slow')
-        $(user_container).append(new User_Block(res.data['first_name'],res.data['email']).render_html())
+        if(res.data !== null){
+            $('.loading-wrapper-1').fadeOut('slow')
+            $(user_container).append(new User_Block(res.data['first_name'],res.data['email']).render_html())
+        }else{
+            console.log('hello')
+            $('.loading-wrapper-1').fadeOut('slow')
+            not_found_ico.style.display = 'flex'
+            $(user_container).append(not_found_ico)
+        }
     })
     .catch(error =>{
         console.log(error)

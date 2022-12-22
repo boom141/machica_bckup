@@ -19,7 +19,7 @@
    
   /* Handle */
   ::-webkit-scrollbar-thumb {
-    background: grey; 
+    background: #808080; 
     border-radius: 5px;
   }
   
