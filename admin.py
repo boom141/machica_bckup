@@ -74,3 +74,26 @@ class Daily_appointment(Resource):
 				return make_response(jsonify({'message':'database_access_denied', 'error':200}))
 
 api.add_resource(Daily_appointment,'/admin/DailyAppointments')
+
+
+class Get_Booking_list(Resource):
+	def get(self):
+		with app.app_context():
+			try:
+				bookings = machica_bookings.find({},{'_id':0})
+				return list(bookings)
+			except:
+				return make_response(jsonify({'message':'database_access_denied', 'error':200}))
+
+api.add_resource(Get_Booking_list,'/admin/BookingList')
+
+class Get_Order_list(Resource):
+	def get(self):
+		with app.app_context():
+			try:
+				orders = machica_orders.find({},{'_id':0})
+				return list(orders)
+			except:
+				return make_response(jsonify({'message':'database_access_denied', 'error':200}))
+
+api.add_resource(Get_Order_list,'/admin/OrderList')

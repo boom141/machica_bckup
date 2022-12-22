@@ -63,3 +63,62 @@ class Daily_Schedule{
 
 
 
+class booking_Block{
+    constructor(day,month,service_name,scheduled_time,first_name,last_name,email){
+        this.day = day
+        this.month = month
+        this.service_name = service_name
+        this.scheduled_time = scheduled_time
+        this.first_name = first_name
+        this.last_name = last_name
+        this.email = email
+    }
+    render_html(){
+        return `<div class="book-today apt-block">
+                    <div class="date-section">
+                        <h1 style="color: white; font-size: 3.5rem; line-height: 3rem;">${this.day}</h1>
+                        <h6 style="color: white; font-size: .8rem; font-weight:bold;">${this.month}</h6>
+                    </div>
+                    <div class="book-details">
+                        <p style="font-weight: 600; font-size: 1.2rem; line-height: 1.5rem; width: auto;" >Service Category: ${this.service_name} <br>
+                            <span style="font-weight:300; font-size: 1rem;" >${this.first_name} ${this.last_name}: ${this.email}</span> <br>
+                            <span style=" color: white; font-weight:300; font-size: .8rem; background-color: #337c73; padding: .3rem .3rem; border-radius: 20px;">${this.scheduled_time}</span>
+                        </p>
+                    </div>
+                    <span style="height: 5rem; width: 1px; background-color: rgb(189, 189, 189);"></span>
+                    <div class="booking-button">
+                        <span style="color: white; font-weight: bold;">DELETE</span>
+                        <img src="https://img.icons8.com/metro/26/FFFFFF/trash.png"/>
+                    </div>
+                </div>`
+    }
+}
+
+class Order_Block{
+    constructor(item_name,reference_code,first_name,last_name,email,quantity){
+        this.item_name = item_name
+        this.reference_code = reference_code
+        this.first_name = first_name
+        this.last_name = last_name
+        this.email = email
+        this.quantity = quantity
+    }
+    render_html(){
+        return `<div class="book-today apt-block">
+                    <div class="date-section order-section">
+                    <img style="height: 4rem; width: 4rem;" src="https://img.icons8.com/ios-filled/100/FFFFFF/tooth.png"/>
+                    </div>
+                    <div class="book-details">
+                        <p style="font-weight: 600; font-size: 1.2rem; line-height: 1.5rem; width: auto;" >${this.item_name}: ${this.reference_code} <br>
+                            <span style="font-weight:300; font-size: 1rem;" >${this.first_name} ${this.last_name}: ${this.email}</span> <br>
+                            <span style=" color: white; font-weight:300; font-size: .8rem; background-color: #337c73; padding: .3rem .3rem; border-radius: 20px;">${this.quantity}</span>
+                        </p>
+                    </div>
+                    <span style="height: 5rem; width: 1px; background-color: rgb(189, 189, 189);"></span>
+                    <div class="booking-button">
+                        <span style="color: white; font-weight: bold;">DELETE</span>
+                        <img src="https://img.icons8.com/metro/26/FFFFFF/trash.png"/>
+                    </div>
+                </div>`
+    }
+}

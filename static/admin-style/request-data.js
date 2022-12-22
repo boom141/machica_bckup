@@ -2,12 +2,14 @@ window.onload = () =>{
     get_user_list()
     get_today_schedule()
     get_total_status()
+    get_booking_list()
+    get_order_list()
 }
 
 const get_user_list = () =>{
     axios.get(`${window.origin}/admin/getUserList`)
     .then(res =>{
-        $('.loading-wrapper').fadeOut('slow')
+        $('.loading-wrapper-1').fadeOut('slow')
         load_user_data(res.data)
     })
     .catch(error =>{
