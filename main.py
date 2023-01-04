@@ -245,36 +245,61 @@ def get_referece_number():
             
     return reference_number
 
+@app.route('/admin/login', methods=['POST','GET'])
+def admin_login():
+    # if 'admin' in session:
+    #     return redirect(url_for('admin_dashboard'))
+    # else:
+    #     if request.method == 'POST':
+    #         email = request.form['email']
+    #         password = request.form['password']
+            
+    #         admin_email_exist  =  machica_admins.find_one({'admin_email':email})
+    #         admin_email_pass = machica_admins.find_one({'admin_password':password})
+
+    #         if admin_email_exist and admin_email_pass :
+    #             session['admin'] = 'admin'
+    #             return redirect(url_for('admin_dashboard'))
+    #         else:
+    #             flash(' this admin account is not authorize.')
+    #             return redirect(url_for('admin_login'))
+
+    #     else:
+    #         return render_template('admin-login.html')
+    session['admin'] = 'admin'
+    return redirect(url_for('admin_dashboard'))
+
 
 @app.route('/admin/dashboard')
 def admin_dashboard():
-    return render_template('admin-dashboard.html')
+    if 'admin' in session:
+        return render_template('admin-dashboard.html')
+    else:
+        return redirect(url_for('landing'))
 
 @app.route('/admin/booking')
 def admin_booking():
-    return render_template('admin-booking.html')
+    if 'admin' in session:
+        return render_template('admin-booking.html')
+    else:
+         return redirect(url_for('landing'))
 
 @app.route('/admin/order')
 def admin_order():
-    return render_template('admin-order.html')
+    if 'admin' in session:
+        return render_template('admin-order.html')
+    else:
+        return redirect(url_for('landing'))
 
 @app.route('/logout')
 def logout():
-    session.pop('user', None)
-    session.pop('confirmation_email',None)
-    session.pop('firstname', None)
-    session.pop('lastname', None)
-    session.pop('gender', None)
-    session.pop('phone_number', None)
-    session.pop('registered_email', None)
-    session.pop('password', None)
-    session.pop('confirm_password', None)
+    session_keys = list(session)
+    for key in session_keys:
+        session.pop(key, None)
+
     return redirect(url_for('landing'))
 
 
-@app.route('/sample')
-def sample():
-    return render_template('sample.html')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5500, debug=True)

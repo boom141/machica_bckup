@@ -10,8 +10,9 @@ const get_user_list = () =>{
     axios.get(`${window.origin}/admin/getUserList`)
     .then(res =>{
         if(res.data.length > 0){
-            $('.loading-wrapper-1').fadeOut('slow')
-            load_user_data(res.data)
+            $('.loading-wrapper-1').fadeOut('slow', ()=>{
+                load_user_data(res.data)
+            })
         }else{
             $('.loading-wrapper-1').fadeOut('slow')
             $('.empty-container-2').css('display','flex')
@@ -22,14 +23,62 @@ const get_user_list = () =>{
     })
 }
 
-const user_container = document.getElementById('user-container')
+const get_user_history = (user) => {
+    return axios.post(`${window.origin}/admin/userHistory`, user)
+    .then(res => {
+        return res.data
+    })
+    .catch(error => {
+        console.log(error)
+    })
+}
+
+const userBlock_container = document.getElementById('user-block-container')
 const load_user_data = (user_data) =>{
-    while(user_container.firstElementChild){
-        user_container.firstElementChild.remove()
+    while(userBlock_container.firstElementChild){
+        userBlock_container.firstElementChild.remove()
       }
+
+    $(userBlock_container).css('display','flex')
     for(user of user_data){
-        $(user_container).append(new User_Block(user['first_name'],user['email']).render_html())
+        $(userBlock_container).append(new User_Block(user['first_name'],user['email'], 'block').render_html())
     }
+    for(block of userBlock_container.children){
+        block.addEventListener('click', userLogs)
+    }
+}
+
+const userLogs = e =>{
+    let historyUser = e.target.children[0].children[0].innerText
+    let requestUser = e.target.children[0].children[1].innerText
+
+    const formData = new FormData()
+    formData.append('user', requestUser)
+    
+    $(userBlock_container).fadeOut('fast' ,()=>{
+        $('.user-container').append(`<h5> <img onclick="hideLogs()" style="transform: scaleX(-1); cursor: pointer" src="https://img.icons8.com/ios-glyphs/50/337c73/circled-right.png"/>
+        User: ${historyUser}'s activity logs</h5>`)
+        
+        get_user_history(formData).then(user_log_list =>{
+            for(list of user_log_list){
+                for(data of list){  
+                    if('poa' in data)
+                        $('.user-container').append(new User_Block(`Type:${data['poa']}`,`${data['time']} | ${data['date']}`, 'none').render_html())
+                    else
+                        $('.user-container').append(new User_Block(`Type:${data['product']}`,`${data['date']}`, 'none').render_html())
+                }
+                
+            }
+        })
+
+    })
+}
+
+const hideLogs = () => {
+    while(document.getElementById('user-container').firstElementChild){
+        document.getElementById('user-container').firstElementChild.remove()
+    }
+    window.location.reload()
 }
 
 

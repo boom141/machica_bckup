@@ -8,6 +8,7 @@ db = cluster['machica_db']
 machica_users = db['machica_users']
 machica_orders = db['machica_orders']
 machica_bookings = db['machica_bookings']
+machica_admins = db['machica_admin']
 
 
 def add_users(firstname,lastname,gender,phonenumber,email,password):

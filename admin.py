@@ -97,3 +97,20 @@ class Get_Order_list(Resource):
 				return make_response(jsonify({'message':'database_access_denied', 'error':200}))
 
 api.add_resource(Get_Order_list,'/admin/OrderList')
+
+
+class User_History(Resource):
+	def post(self):
+		with app.app_context():
+			try:
+				targetUser = request.form.get('user')
+
+				bookingHistory = machica_bookings.find({'email':targetUser},{'_id':0})
+				orderHistory = machica_orders.find({'email':targetUser},{'_id':0})
+
+				return [list(bookingHistory), list(orderHistory)]
+			except:
+				return make_response(jsonify({'message':'database_access_denied', 'error':200}))
+
+
+api.add_resource(User_History,'/admin/userHistory')

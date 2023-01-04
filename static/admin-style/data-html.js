@@ -1,7 +1,9 @@
 class User_Block{
-    constructor(name,email){
+    constructor(name,email,visibility){
         this.name = name
         this.email = email
+        this.visibility = visibility
+
     }
     render_html(){
         return `<div class="user-block">
@@ -9,7 +11,7 @@ class User_Block{
                         <strong style="font-size: .9rem; margin-top: rem;">${this.name}</strong>
                         <h6 style="font-size: .7rem;">${this.email}</h6>
                     </div>
-                    <img src="https://img.icons8.com/ios-glyphs/50/337c73/circled-right.png"/>
+                    <img style="pointer-events: none; display: ${this.visibility}" src="https://img.icons8.com/ios-glyphs/50/337c73/circled-right.png"/>
                 </div>`
     }
 }
