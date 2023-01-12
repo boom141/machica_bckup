@@ -32,7 +32,6 @@ const load_sold_status = (data) =>{
 const get_today_schedule = () =>{
     axios.get(`${window.origin}/admin/DailyAppointments`)
     .then(res =>{
-        
         if(res.data.length > 0){
             $('.loading-wrapper-2').fadeOut()
             load_today_schedule(res.data)
@@ -54,9 +53,38 @@ const load_today_schedule = (user_data) =>{
         booking_container.firstElementChild.remove()
     }
 
-    for(data of user_data){
+    for(let data of user_data){
         $(booking_container).append(new Daily_Schedule(data['first_name'],data['last_name'],
         data['email'],data['poa'],data['time']).render_html())
     }
+
+    finishAppointment(document.querySelectorAll('.book-today'))
+    document.querySelectorAll('.btn-typ').forEach(elem =>{
+        elem.addEventListener('click', event =>{
+            $(event.target.offsetParent.children[0]).css('width', '100%')
+            sessionStorage.setItem(event.target.offsetParent.children[1].children[0].innerText,event.target.offsetParent.children[5].children[1].innerText)
+            
+            for(let i=0; i<event.target.offsetParent.children.length; i++) {
+                event.target.offsetParent.children[i].style.color = 'white'
+            }
+            
+            event.target.style.cursor = 'auto'
+    })
+})
 }
 
+const finishAppointment = data =>{
+    if(sessionStorage.length > 0){
+       for(let selector of data){
+            if (selector.children[1].children[0].innerText in sessionStorage){
+                $(selector.children[0]).css('width', '100%')
+                
+                for(let i=0; i<selector.children.length; i++) {
+                    selector.children[i].style.color = 'white'
+                    selector.lastElementChild.style.cursor = 'auto'
+                }
+
+            }
+       }
+    }
+}

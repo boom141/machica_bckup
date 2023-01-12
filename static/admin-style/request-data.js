@@ -4,6 +4,7 @@ window.onload = () =>{
     get_total_status()
     get_booking_list()
     get_order_list()
+
 }
 
 const get_user_list = () =>{

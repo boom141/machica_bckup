@@ -13,7 +13,6 @@ class Get_User_list(Resource):
 			except:
 				return make_response(jsonify({'message':'database_access_denied', 'error':200}))
 
-
 	def post(self):
 		with app.app_context():
 			try:
@@ -26,7 +25,6 @@ class Get_User_list(Resource):
 
 
 api.add_resource(Get_User_list,'/admin/getUserList')
-
 
 class Monthly_Sold(Resource):
 	def get(self):
@@ -65,10 +63,10 @@ class Daily_appointment(Resource):
 				today_month = datetime.now().month
 				today_year = datetime.now().year
 
-				current_date = f'{today_year}-{today_month}-{today_day}'
+				current_date = f"{today_year}-{today_month if not len(str(today_month)) < 2 else f'0{today_month}'}-{today_day if not len(str(today_day)) < 2 else f'0{today_day}'}"
 
 				appointments = machica_bookings.find({'date':current_date},{'_id':0})
-
+				
 				return list(appointments)
 			except:
 				return make_response(jsonify({'message':'database_access_denied', 'error':200}))
@@ -76,28 +74,57 @@ class Daily_appointment(Resource):
 api.add_resource(Daily_appointment,'/admin/DailyAppointments')
 
 
+
 class Get_Booking_list(Resource):
 	def get(self):
 		with app.app_context():
 			try:
-				bookings = machica_bookings.find({},{'_id':0})
+				bookings = machica_bookings.find({},{'_id':0}).sort('date',-1)
+
 				return list(bookings)
 			except:
 				return make_response(jsonify({'message':'database_access_denied', 'error':200}))
 
 api.add_resource(Get_Booking_list,'/admin/BookingList')
 
+class DeleteBooking(Resource):
+	def post(self):
+		with app.app_context():
+			try:
+				data = request.form.get('data')
+
+				machica_bookings.delete_one({'reference_id':data})
+				
+				return 'success'
+			except:
+				return make_response(jsonify({'message':'database_access_denied', 'error':200}))
+
+api.add_resource(DeleteBooking,'/admin/deleteList')
+
 class Get_Order_list(Resource):
 	def get(self):
 		with app.app_context():
 			try:
-				orders = machica_orders.find({},{'_id':0})
+				orders = machica_orders.find({},{'_id':0}).sort('date',-1)
 				return list(orders)
 			except:
 				return make_response(jsonify({'message':'database_access_denied', 'error':200}))
 
 api.add_resource(Get_Order_list,'/admin/OrderList')
 
+
+class DeleteOrder(Resource):
+	def post(self):
+		with app.app_context():
+			try:
+				data = request.form.get('data')
+				
+				machica_orders.delete_one({'reference_id': data})
+				return 'success'
+			except:
+				return make_response(jsonify({'message':'database_access_denied', 'error':200}))
+
+api.add_resource(DeleteOrder,'/admin/deleteOrder')
 
 class User_History(Resource):
 	def post(self):

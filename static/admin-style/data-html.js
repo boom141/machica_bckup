@@ -43,6 +43,7 @@ class Daily_Schedule{
     }
      render_html(){
         return `<div class="book-today">
+                <div class="checker"></div>
                 <div class="profile-section">
                     <strong>${this.first_name} ${this.last_name}</strong>
                     <h6>${this.email}</h6 >
@@ -58,7 +59,7 @@ class Daily_Schedule{
                     <h6>${this.scheduled_time}</h6 >
                 </div>
                 <span style="height: 100%; width: 1px; background-color: rgb(189, 189, 189);"></span>
-                <div class="btn-typ" style="margin-left: 1.5rem;"><img src="https://img.icons8.com/metro/26/337c73/trash.png"/></div>
+                <div class="btn-typ" style="margin-left: 1.5rem;"><img src="https://img.icons8.com/external-febrian-hidayat-glyph-febrian-hidayat/40/337c73/external-check-ui-essential-febrian-hidayat-glyph-febrian-hidayat.png"/></div>
             </div>`
      }     
 }
@@ -66,7 +67,7 @@ class Daily_Schedule{
 
 
 class booking_Block{
-    constructor(day,month,service_name,scheduled_time,first_name,last_name,email){
+    constructor(day,month,service_name,scheduled_time,first_name,last_name,email,referenceId){
         this.day = day
         this.month = month
         this.service_name = service_name
@@ -74,7 +75,8 @@ class booking_Block{
         this.first_name = first_name
         this.last_name = last_name
         this.email = email
-    }
+        this.referenceId = referenceId
+    }   
     render_html(){
         return `<div class="book-today apt-block">
                     <div class="date-section">
@@ -82,7 +84,7 @@ class booking_Block{
                         <h6 style="color: white; font-size: .8rem; font-weight:bold;">${this.month}</h6>
                     </div>
                     <div class="book-details">
-                        <p style="font-weight: 600; font-size: 1.2rem; line-height: 1.5rem; width: auto;" >Service Category: ${this.service_name} <br>
+                        <p style="font-weight: 600; font-size: 1.2rem; line-height: 1.5rem; width: auto;" >${this.service_name}:${this.referenceId} <br>
                             <span style="font-weight:300; font-size: 1rem;" >${this.first_name} ${this.last_name}: ${this.email}</span> <br>
                             <span style=" color: white; font-weight:300; font-size: .8rem; background-color: #337c73; padding: .3rem .3rem; border-radius: 20px;">${this.scheduled_time}</span>
                         </p>
@@ -97,13 +99,15 @@ class booking_Block{
 }
 
 class Order_Block{
-    constructor(item_name,reference_code,first_name,last_name,email,quantity){
+    constructor(item_name,reference_code,first_name,last_name,email,quantity,date){
         this.item_name = item_name
         this.reference_code = reference_code
         this.first_name = first_name
         this.last_name = last_name
         this.email = email
         this.quantity = quantity
+        this.date = date
+            
     }
     render_html(){
         return `<div class="book-today apt-block">
@@ -111,9 +115,9 @@ class Order_Block{
                     <img style="height: 4rem; width: 4rem;" src="https://img.icons8.com/ios-filled/100/FFFFFF/tooth.png"/>
                     </div>
                     <div class="book-details">
-                        <p style="font-weight: 600; font-size: 1.2rem; line-height: 1.5rem; width: auto;" >${this.item_name}: ${this.reference_code} <br>
+                        <p style="font-weight: 600; font-size: 1.2rem; line-height: 1.5rem; width: auto;" >${this.item_name}:${this.reference_code} <br>
                             <span style="font-weight:300; font-size: 1rem;" >${this.first_name} ${this.last_name}: ${this.email}</span> <br>
-                            <span style=" color: white; font-weight:300; font-size: .8rem; background-color: #337c73; padding: .3rem .3rem; border-radius: 20px;">${this.quantity}</span>
+                            <span style=" color: white; font-weight:300; font-size: .8rem; background-color: #337c73; padding: .3rem .3rem; border-radius: 20px;">${this.date} | ${this.quantity}</span>
                         </p>
                     </div>
                     <span style="height: 5rem; width: 1px; background-color: rgb(189, 189, 189);"></span>

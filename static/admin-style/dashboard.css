@@ -95,8 +95,11 @@
     flex-direction: row;
     justify-content: flex-end;
     align-items: center;
+    background: white;
     cursor: pointer;
+    border-radius: 50px;
 }
+
 
 .bookings-container{
     width: 100%;
@@ -115,12 +118,10 @@
     border-radius: 10px;
     box-shadow: 0 2px 3px rgba(0, 0, 0, 0.312);
     position: relative;
-    cursor: pointer;
     margin-top: .5rem;
 }
-.book-today::before{
+.checker{
     background: #337c73;
-    content: "";
     inset: 0;
     position: absolute;
     width: 1%;
